@@ -37,7 +37,7 @@
       inherit system;
 
       specialArgs = {
-        inherit inputs pkgs pkgsUnstable;
+        inherit inputs pkgs pkgsUnstable quickshell;
       };
 
       modules = [
@@ -49,7 +49,7 @@
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
           home-manager.backupFileExtension = "backup";
-          home-manager.extraSpecialArgs = { inherit inputs pkgs pkgsUnstable; };
+          home-manager.extraSpecialArgs = { inherit inputs pkgs pkgsUnstable quickshell; };
           home-manager.users.sohail = import ./home.nix;
         }
       ];

@@ -1,4 +1,4 @@
-{ config, pkgs, pkgsUnstable, inputs, ... }:
+{ config, pkgs, pkgsUnstable, quickshell, inputs, ... }:
 {
   home.username = "sohail";
   home.homeDirectory = "/home/sohail";
@@ -10,7 +10,7 @@
   
   # Configure Caelestia shell
   programs.caelestia = {
-    enable = true;
+    enable = false;
     
     systemd = {
       enable = false;  # We'll start it from niri instead
@@ -104,6 +104,7 @@
     foliate
     yt-dlp
     stm32cubemx
+    quickshell.packages.${pkgs.system}.default
   ];
   
   # GTK Configuration - ADD THIS SECTION
