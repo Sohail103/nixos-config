@@ -1,4 +1,11 @@
 { config, pkgs, pkgsUnstable, quickshell, inputs, ... }:
+
+let
+  waybar-mediaplayer = pkgs.writeShellScriptBin "waybar-mediaplayer" ''
+    export GI_TYPELIB_PATH="${pkgs.playerctl}/lib/girepository-1.0:${pkgs.glib}/lib/girepository-1.0:${pkgs.gtk3}/lib/girepository-1.0"
+    exec ${pkgs.python3.withPackages (ps: with ps; [ pygobject3 ])}/bin/python /home/sohail/.config/waybar/waybar-mediaplayer/src/mediaplayer "$@"
+  '';  
+in
 {
   home.username = "sohail";
   home.homeDirectory = "/home/sohail";
@@ -45,9 +52,11 @@
       gs = "git status";
       nv = "nvim";
       cls = "clear";
+      sw = "sudo nixos-rebuild switch";
     };
     initExtra = ''
       PROMPT="%F{cyan}%n@%m%f:%F{yellow}%~%f$ "
+      export GI_TYPELIB_PATH="${pkgs.playerctl}/lib/girepository-1.0:${pkgs.glib}/lib/girepository-1.0:${pkgs.gtk3}/lib/girepository-1.0"
     '';
   };
   
@@ -105,9 +114,30 @@
     yt-dlp
     stm32cubemx
     quickshell.packages.${pkgs.system}.default
+    
     waybar
     pywal
+    nerd-fonts.code-new-roman
+    swww
+    wofi
+    swaynotificationcenter
+    wlogout
+    tasks
+    playerctl
+    gobject-introspection
+    waybar-mediaplayer
+
+    (pkgs.python3.withPackages (ps: with ps; [
+    pillow
+    pycairo
+    pygobject3
+    syncedlyrics
+    ]))
   ];
+
+  fonts.fontconfig.enable = true;
+
+
   
   # GTK Configuration - ADD THIS SECTION
   gtk = {
@@ -163,7 +193,8 @@
   home.sessionVariables = {
     EDITOR = "nvim";
     SHELL = "${pkgs.zsh}/bin/zsh";
-    GTK_THEME = "Adwaita-dark";  # Add this
+    GTK_THEME = "Adwaita-dark";  
+    GI_TYPELIB_PATH = "${pkgs.playerctl}/lib/girepository-1.0:${pkgs.glib}/lib/girepository-1.0:${pkgs.gtk3}/lib/girepository-1.0";
   };
   
   home.stateVersion = "25.05";

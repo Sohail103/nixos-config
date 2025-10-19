@@ -137,6 +137,7 @@
     linux-wifi-hotspot
     iw
     iwd
+    pyenv
 
     vscode
     python3
