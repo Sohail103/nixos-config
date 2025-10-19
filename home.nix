@@ -105,6 +105,8 @@
     yt-dlp
     stm32cubemx
     quickshell.packages.${pkgs.system}.default
+    waybar
+    pywal
   ];
   
   # GTK Configuration - ADD THIS SECTION
