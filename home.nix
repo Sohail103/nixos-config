@@ -1,10 +1,18 @@
 { config, pkgs, pkgsUnstable, quickshell, inputs, ... }:
 
 let
+  pythonEnv = pkgs.python3.withPackages (ps: with ps; [ 
+    pygobject3 
+    requests 
+    pillow
+    pycairo
+    syncedlyrics
+  ]);
+  
   waybar-mediaplayer = pkgs.writeShellScriptBin "waybar-mediaplayer" ''
-    export GI_TYPELIB_PATH="${pkgs.playerctl}/lib/girepository-1.0:${pkgs.glib}/lib/girepository-1.0:${pkgs.gtk3}/lib/girepository-1.0"
-    exec ${pkgs.python3.withPackages (ps: with ps; [ pygobject3 ])}/bin/python /home/sohail/.config/waybar/waybar-mediaplayer/src/mediaplayer "$@"
-  '';  
+    export GI_TYPELIB_PATH="${pkgs.glib.out}/lib/girepository-1.0:${pkgs.playerctl}/lib/girepository-1.0:${pkgs.gtk3}/lib/girepository-1.0"
+    exec ${pythonEnv}/bin/python /home/sohail/.config/waybar/waybar-mediaplayer/src/mediaplayer "$@"
+  '';
 in
 {
   home.username = "sohail";
@@ -57,6 +65,7 @@ in
     initExtra = ''
       PROMPT="%F{cyan}%n@%m%f:%F{yellow}%~%f$ "
       export GI_TYPELIB_PATH="${pkgs.playerctl}/lib/girepository-1.0:${pkgs.glib}/lib/girepository-1.0:${pkgs.gtk3}/lib/girepository-1.0"
+      setopt INTERACTIVE_COMMENTS
     '';
   };
   
@@ -93,7 +102,6 @@ in
     grim  # Screenshot utility
     slurp  # Screen area selector
     wl-clipboard  # Clipboard utilities
-    swaylock  # Screen locker
     wlogout  # Logout menu
     brightnessctl  # Brightness control
     pavucontrol  # Audio control GUI
@@ -126,6 +134,9 @@ in
     playerctl
     gobject-introspection
     waybar-mediaplayer
+    feh
+    swayidle
+    hyprlock
 
     (pkgs.python3.withPackages (ps: with ps; [
     pillow
@@ -136,8 +147,6 @@ in
   ];
 
   fonts.fontconfig.enable = true;
-
-
   
   # GTK Configuration - ADD THIS SECTION
   gtk = {
@@ -161,6 +170,52 @@ in
       gtk-application-prefer-dark-theme = true;
     };
   };
+    
+  programs.swaylock = {
+    enable = true;
+    package = pkgs.swaylock-effects;
+    settings = {
+      color = "1e1e2e";
+      font-size = 24;
+      
+      indicator-radius = 100;
+      indicator-thickness = 7;
+      
+      # Ring colors
+      ring-color = "313244";
+      ring-ver-color = "89b4fa";
+      ring-wrong-color = "f38ba8";
+      
+      # Inside colors
+      inside-color = "1e1e2e";
+      inside-ver-color = "1e1e2e";
+      inside-wrong-color = "1e1e2e";
+      
+      # Line colors (transparent)
+      line-color = "00000000";
+      line-ver-color = "00000000";
+      line-wrong-color = "00000000";
+      
+      # Separator color
+      separator-color = "00000000";
+      
+      # Key highlight and text colors
+      key-hl-color = "cba6f7";
+      text-color = "cdd6f4";
+      text-ver-color = "89b4fa";
+      text-wrong-color = "f38ba8";
+      
+      # Effects
+      effect-blur = "7x5";
+      effect-vignette = "0.5:0.5";
+      fade-in = "0.2";
+      
+      show-failed-attempts = true;
+    };
+  };
+
+
+  
   
   # Cursor Configuration - ADD THIS SECTION
   home.pointerCursor = {

@@ -69,9 +69,13 @@
 
   # Display manager
   services.xserver = {
-    enable = true;
-    displayManager.gdm.enable = true;
+    enable = false;
+    #displayManager.gdm.enable = true;
     desktopManager.gnome.enable = true;
+  };
+
+  services.displayManager.ly = {
+    enable = true;
   };
 
   programs.hyprland = {
@@ -143,6 +147,9 @@
     python3
     xwayland-satellite
   ];
+
+  security.pam.services.hyprlock = {};
+  security.pam.services.swaylock = {};
 
   environment.etc = {
     "wireplumber/bluetooth.lua.d/51-bluez-config.lua".text = ''
