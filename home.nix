@@ -143,6 +143,8 @@ in
     pycairo
     pygobject3
     syncedlyrics
+
+    cheese
     ]))
   ];
 

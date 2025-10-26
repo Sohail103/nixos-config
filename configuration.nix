@@ -69,13 +69,30 @@
 
   # Display manager
   services.xserver = {
-    enable = false;
-    #displayManager.gdm.enable = true;
+    enable = true;
+    displayManager.gdm.enable = false;
     desktopManager.gnome.enable = true;
   };
 
   services.displayManager.ly = {
     enable = true;
+    settings = {
+      path="/run/current-system/sw/bin";
+      restart_cmd="/run/current-system/systemd/bin/systemctl reboot";
+      service_name="ly";
+      setup_cmd="/nix/store/hb43icgm4f0iifksdbik32my4vdxhbfq-xsession-wrapper";
+      shutdown_cmd="/run/current-system/systemd/bin/systemctl poweroff";
+      term_reset_cmd="/nix/store/lm4wm3f4ynilxw8yvgqq0hj2ng8ky9xy-ncurses-6.5/bin/tput reset";
+      term_restore_cursor_cmd="/nix/store/lm4wm3f4ynilxw8yvgqq0hj2ng8ky9xy-ncurses-6.5/bin/tput cnorm";
+      tty=1;
+      waylandsessions="/nix/store/32j66hyi3dj2h87fhfcjf09k6l026jhm-desktops/share/wayland-sessions";
+      x_cmd="";
+      xauth_cmd="";
+      xsessions="/nix/store/32j66hyi3dj2h87fhfcjf09k6l026jhm-desktops/share/xsessions";
+      animation = "doom";
+      bigclock = true;
+      numlock = true;
+    };
   };
 
   programs.hyprland = {
@@ -118,7 +135,7 @@
     isNormalUser = true;
     description = "sohail";
     shell = pkgs.zsh;
-    extraGroups = [ "networkmanager" "wheel" "docker" ];
+    extraGroups = [ "networkmanager" "wheel" "docker" "dialout"];
   };
 
   services.udisks2.enable = true;
@@ -143,9 +160,10 @@
     iwd
     pyenv
 
-    vscode
+    vscode.fhs
     python3
     xwayland-satellite
+    libnotify
   ];
 
   security.pam.services.hyprlock = {};
