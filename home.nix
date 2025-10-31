@@ -61,6 +61,8 @@ in
       nv = "nvim";
       cls = "clear";
       sw = "sudo nixos-rebuild switch";
+      hu = "nmcli connection up Hotspot";
+      hd = "nmcli connection down Hotspot";
     };
     initExtra = ''
       PROMPT="%F{cyan}%n@%m%f:%F{yellow}%~%f$ "

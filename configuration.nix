@@ -86,10 +86,11 @@
       term_restore_cursor_cmd="/nix/store/lm4wm3f4ynilxw8yvgqq0hj2ng8ky9xy-ncurses-6.5/bin/tput cnorm";
       tty=1;
       waylandsessions="/nix/store/32j66hyi3dj2h87fhfcjf09k6l026jhm-desktops/share/wayland-sessions";
-      x_cmd="";
-      xauth_cmd="";
+      x_cmd="/run/current-system/sw/bin/X";
+      xauth_cmd="/run/current-system/sw/bin/xauth";
       xsessions="/nix/store/32j66hyi3dj2h87fhfcjf09k6l026jhm-desktops/share/xsessions";
-      animation = "doom";
+      animation = "gameoflife";
+      animation_timeout_ms=500;
       bigclock = true;
       numlock = true;
     };
