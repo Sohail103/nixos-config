@@ -22,10 +22,16 @@
 
   virtualisation.docker.enable = true;
   networking.firewall = {
-    enable = true;
+    enable = false;
     trustedInterfaces = [ "docker0" "wlo1" ];
-    allowedUDPPorts = [ 67 68 53 ];
-    allowedTCPPorts = [ 53 ];
+    allowedUDPPorts = [ 67 68 53 22000 21027];
+    allowedTCPPorts = [ 53 8384 22000];
+  };
+
+  services = {
+    syncthing = {
+      enable = true;
+    };
   };
 
   hardware.bluetooth = {
@@ -70,29 +76,31 @@
   # Display manager
   services.xserver = {
     enable = true;
-    displayManager.gdm.enable = false;
+    displayManager.gdm.enable = true;
     desktopManager.gnome.enable = true;
   };
 
   services.displayManager.ly = {
-    enable = true;
+    enable = false;
     settings = {
-      path="/run/current-system/sw/bin";
-      restart_cmd="/run/current-system/systemd/bin/systemctl reboot";
-      service_name="ly";
-      setup_cmd="/nix/store/hb43icgm4f0iifksdbik32my4vdxhbfq-xsession-wrapper";
-      shutdown_cmd="/run/current-system/systemd/bin/systemctl poweroff";
-      term_reset_cmd="/nix/store/lm4wm3f4ynilxw8yvgqq0hj2ng8ky9xy-ncurses-6.5/bin/tput reset";
-      term_restore_cursor_cmd="/nix/store/lm4wm3f4ynilxw8yvgqq0hj2ng8ky9xy-ncurses-6.5/bin/tput cnorm";
-      tty=1;
-      waylandsessions="/nix/store/32j66hyi3dj2h87fhfcjf09k6l026jhm-desktops/share/wayland-sessions";
-      x_cmd="/run/current-system/sw/bin/X";
-      xauth_cmd="/run/current-system/sw/bin/xauth";
-      xsessions="/nix/store/32j66hyi3dj2h87fhfcjf09k6l026jhm-desktops/share/xsessions";
-      animation = "gameoflife";
-      animation_timeout_ms=500;
-      bigclock = true;
-      numlock = true;
+    path="/run/current-system/sw/bin";
+    restart_cmd="/run/current-system/systemd/bin/systemctl reboot";
+    service_name="ly";
+    # Remove or comment out the X11-specific setup_cmd
+    # setup_cmd="/run/current-system/sw/bin/xsession-wrapper";
+    shutdown_cmd="/run/current-system/systemd/bin/systemctl poweroff";
+    term_reset_cmd="/run/current-system/sw/bin/clear";
+    term_restore_cursor_cmd="/run/current-system/sw/bin/tput cnorm";
+    tty=1;
+    waylandsessions="/run/current-system/sw/share/wayland-sessions";
+    # x_cmd and xauth_cmd are only needed for X11 sessions
+    x_cmd="/run/current-system/sw/bin/X";
+    xauth_cmd="/run/current-system/sw/bin/xauth";
+    xsessions="/run/current-system/sw/share/xsessions";
+    animation = "gameoflife";
+    animation_timeout_ms=500;
+    bigclock = true;
+    numlock = true;
     };
   };
 
@@ -107,7 +115,7 @@
   };
 
   # Enable niri compositor
-  programs.niri.enable = true;
+   programs.niri.enable = true;
 
   # Printing
   services.printing.enable = true;
@@ -136,10 +144,13 @@
     isNormalUser = true;
     description = "sohail";
     shell = pkgs.zsh;
-    extraGroups = [ "networkmanager" "wheel" "docker" "dialout"];
+    extraGroups = [ "networkmanager" "wheel" "docker" "dialout" "kvm" "libvirtd"];
   };
 
   services.udisks2.enable = true;
+
+  virtualisation.libvirtd.enable = true;
+  virtualisation.spiceUSBRedirection.enable = true; # optional, for GUI VMs
 
   # System packages
   environment.systemPackages = with pkgs; [
@@ -165,6 +176,15 @@
     python3
     xwayland-satellite
     libnotify
+    gnome-session
+    gdm
+
+    nmap
+    zip
+    
+    qemu_full
+    virt-manager
+    tmux
   ];
 
   security.pam.services.hyprlock = {};
@@ -200,6 +220,10 @@
   services.upower = {
   	enable = true;
   };
+
+  services.xserver.videoDrivers = [ "vmware" ];
+  virtualisation.vmware.host.enable = true;
+  virtualisation.vmware.host.package = pkgs.vmware-workstation;
 
   system.stateVersion = "25.05";
 }
