@@ -151,7 +151,7 @@ in
   ];
 
   fonts.fontconfig.enable = true;
-  
+
   # GTK Configuration - ADD THIS SECTION
   gtk = {
     enable = true;

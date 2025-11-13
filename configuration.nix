@@ -31,6 +31,9 @@
   services = {
     syncthing = {
       enable = true;
+      user = "sohail";
+      dataDir = "/home/sohail/.local/share/syncthing";
+      openDefaultPorts = true;
     };
   };
 
@@ -178,6 +181,7 @@
     libnotify
     gnome-session
     gdm
+    kdePackages.kdenlive
 
     nmap
     zip
@@ -185,6 +189,7 @@
     qemu_full
     virt-manager
     tmux
+    gemini-cli
   ];
 
   security.pam.services.hyprlock = {};
