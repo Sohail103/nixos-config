@@ -182,6 +182,8 @@
     gnome-session
     gdm
     kdePackages.kdenlive
+    obs-studio
+    droidcam
 
     nmap
     zip
@@ -190,6 +192,7 @@
     virt-manager
     tmux
     gemini-cli
+    vivaldi
   ];
 
   security.pam.services.hyprlock = {};
