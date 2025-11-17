@@ -20,6 +20,15 @@
   boot.kernel.sysctl."net.ipv6.conf.all.forwarding" = 1;
   services.cloudflare-warp.enable = true;
 
+  boot.extraModulePackages = with config.boot.kernelPackages; [
+    v4l2loopback
+  ];
+
+  boot.kernelModules = [
+    "v4l2loopback"
+  ];
+
+
   virtualisation.docker.enable = true;
   networking.firewall = {
     enable = false;
@@ -184,6 +193,8 @@
     kdePackages.kdenlive
     obs-studio
     droidcam
+    android-tools
+    pulseaudio
 
     nmap
     zip
@@ -193,6 +204,8 @@
     tmux
     gemini-cli
     vivaldi
+
+    intel-gpu-tools
   ];
 
   security.pam.services.hyprlock = {};
