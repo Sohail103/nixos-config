@@ -88,12 +88,12 @@
   # Display manager
   services.xserver = {
     enable = true;
-    displayManager.gdm.enable = true;
+    displayManager.gdm.enable = false;
     desktopManager.gnome.enable = true;
   };
 
   services.displayManager.ly = {
-    enable = false;
+    enable = true;
     settings = {
     path="/run/current-system/sw/bin";
     restart_cmd="/run/current-system/systemd/bin/systemctl reboot";
@@ -194,7 +194,6 @@
     obs-studio
     droidcam
     android-tools
-    pulseaudio
 
     nmap
     zip
@@ -241,10 +240,6 @@
   services.upower = {
   	enable = true;
   };
-
-  services.xserver.videoDrivers = [ "vmware" ];
-  virtualisation.vmware.host.enable = true;
-  virtualisation.vmware.host.package = pkgs.vmware-workstation;
 
   system.stateVersion = "25.05";
 }
