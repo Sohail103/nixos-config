@@ -20,6 +20,13 @@
   boot.kernel.sysctl."net.ipv6.conf.all.forwarding" = 1;
   services.cloudflare-warp.enable = true;
 
+  boot.kernelParams = [
+  "i915.modeset=1"
+  "i915.enable_guc=3"
+  "i915.vram_size=512M"
+  ];
+
+
   boot.extraModulePackages = with config.boot.kernelPackages; [
     v4l2loopback
   ];
@@ -104,11 +111,11 @@
     term_reset_cmd="/run/current-system/sw/bin/clear";
     term_restore_cursor_cmd="/run/current-system/sw/bin/tput cnorm";
     tty=1;
-    waylandsessions="/run/current-system/sw/share/wayland-sessions";
+    waylandsessions="/etc/wayland-sessions/";
     # x_cmd and xauth_cmd are only needed for X11 sessions
-    x_cmd="/run/current-system/sw/bin/X";
-    xauth_cmd="/run/current-system/sw/bin/xauth";
-    xsessions="/run/current-system/sw/share/xsessions";
+    #x_cmd="/run/current-system/sw/bin/X";
+    #xauth_cmd="/run/current-system/sw/bin/xauth";
+    #xsessions="/run/current-system/sw/share/xsessions";
     animation = "gameoflife";
     animation_timeout_ms=500;
     bigclock = true;
@@ -120,10 +127,21 @@
   enable = true;
   xwayland.enable = true; # Needed for apps that don’t support Wayland
   };
+
+  environment.etc."wayland-sessions/niri.desktop".text=''
+  [Desktop Entry]
+  Name=Niri
+  Comment=Niri Wayland Compositor
+  Exec=niri-session
+  Type=Application
+  DesktopNames=Niri
+  '';
   
   environment.sessionVariables = {
   NIXOS_OZONE_WL = "1"; # Makes Electron apps run natively on Wayland
   WLR_NO_HARDWARE_CURSORS = "1"; # Fixes black cursor on some GPUs
+  # MESA_LOADER_DRIVER_OVERRIDE = "iris";
+  LIBGL_ALWAYS_SOFTWARE = "0";
   };
 
   # Enable niri compositor
@@ -172,13 +190,12 @@
     neovim
     distrobox
     firefox
+    qutebrowser
     bluez
     bluez-tools
     brightnessctl
     pavucontrol
     upower
-    xwayland
-    adwaita-icon-theme
     linux-wifi-hotspot
     iw
     iwd
@@ -187,9 +204,8 @@
     vscode.fhs
     python3
     xwayland-satellite
+    xwayland
     libnotify
-    gnome-session
-    gdm
     kdePackages.kdenlive
     obs-studio
     droidcam
@@ -205,10 +221,37 @@
     vivaldi
 
     intel-gpu-tools
+    pciutils
+    xorg.xeyes
+
   ];
+
+  programs.steam.enable = true;
+  # environment.sessionVariables.STEAM_USE_WAYLAND = "1";
 
   security.pam.services.hyprlock = {};
   security.pam.services.swaylock = {};
+
+  
+
+hardware.graphics = {
+  enable = true;
+
+  # enables 32-bit OpenGL, Vulkan, VAAPI for Steam / Proton
+  extraPackages = with pkgs; [
+    intel-media-driver
+    libva
+    libvdpau-va-gl
+  ];
+
+  extraPackages32 = with pkgs.pkgsi686Linux; [
+    intel-media-driver
+    libva
+    libvdpau-va-gl
+  ];
+};
+
+
 
   environment.etc = {
     "wireplumber/bluetooth.lua.d/51-bluez-config.lua".text = ''

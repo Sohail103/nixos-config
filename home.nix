@@ -145,6 +145,7 @@ in
     pycairo
     pygobject3
     syncedlyrics
+    spicetify-cli
 
     cheese
     ]))
