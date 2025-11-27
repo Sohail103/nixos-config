@@ -92,12 +92,22 @@
     "z /mnt/hdd 0755 sohail users -"
   ];
 
-  # Display manager
+  # Display manager and desktop environment
   services.xserver = {
     enable = true;
     displayManager.gdm.enable = false;
     desktopManager.gnome.enable = true;
   };
+
+  # Enable GNOME on Wayland
+  services.xserver.displayManager.defaultSession = "gnome";
+  
+  # Exclude GNOME packages you might not want (optional)
+  environment.gnome.excludePackages = with pkgs; [
+    gnome-tour
+    epiphany  # GNOME web browser
+    geary     # email client
+  ];
 
   services.displayManager.ly = {
     enable = true;
@@ -105,17 +115,11 @@
     path="/run/current-system/sw/bin";
     restart_cmd="/run/current-system/systemd/bin/systemctl reboot";
     service_name="ly";
-    # Remove or comment out the X11-specific setup_cmd
-    # setup_cmd="/run/current-system/sw/bin/xsession-wrapper";
     shutdown_cmd="/run/current-system/systemd/bin/systemctl poweroff";
     term_reset_cmd="/run/current-system/sw/bin/clear";
     term_restore_cursor_cmd="/run/current-system/sw/bin/tput cnorm";
     tty=1;
     waylandsessions="/etc/wayland-sessions/";
-    # x_cmd and xauth_cmd are only needed for X11 sessions
-    #x_cmd="/run/current-system/sw/bin/X";
-    #xauth_cmd="/run/current-system/sw/bin/xauth";
-    #xsessions="/run/current-system/sw/share/xsessions";
     animation = "gameoflife";
     animation_timeout_ms=500;
     bigclock = true;
@@ -125,7 +129,7 @@
 
   programs.hyprland = {
   enable = true;
-  xwayland.enable = true; # Needed for apps that don’t support Wayland
+  xwayland.enable = true; # Needed for apps that don't support Wayland
   };
 
   environment.etc."wayland-sessions/niri.desktop".text=''
@@ -223,6 +227,10 @@
     intel-gpu-tools
     pciutils
     xorg.xeyes
+
+    # GNOME-specific packages
+    gnome-tweaks
+    gnomeExtensions.appindicator
 
   ];
 
