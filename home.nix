@@ -68,6 +68,9 @@ in
       PROMPT="%F{cyan}%n@%m%f:%F{yellow}%~%f$ "
       export GI_TYPELIB_PATH="${pkgs.playerctl}/lib/girepository-1.0:${pkgs.glib}/lib/girepository-1.0:${pkgs.gtk3}/lib/girepository-1.0"
       setopt INTERACTIVE_COMMENTS
+      export CC=clang
+      export CXX=clang++
+      export CMAKE_GENERATOR="Ninja"
     '';
   };
   

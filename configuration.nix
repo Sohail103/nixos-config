@@ -18,7 +18,7 @@
   hardware.enableRedistributableFirmware = true;
   boot.kernel.sysctl."net.ipv4.ip_forward" = 1;
   boot.kernel.sysctl."net.ipv6.conf.all.forwarding" = 1;
-  services.cloudflare-warp.enable = true;
+  services.cloudflare-warp.enable = false;
 
   boot.kernelParams = [
   "i915.modeset=1"
@@ -219,7 +219,6 @@
     xwayland
     libnotify
     kdePackages.kdenlive
-    obs-studio
     droidcam
     android-tools
 
@@ -243,7 +242,36 @@
     ffmpeg-full
     vlc
 
+    cmake
+    ninja
+    python3
+    git
+    gdb
+    ccache
+    zlib
+    libxml2
+    libffi
+    ncurses
+    pkg-config
+    which
+            # LLVM toolchain from nixpkgs
+    llvmPackages_18.llvm
+    llvmPackages_18.clang
+    llvmPackages_18.lld
+    llvmPackages_18.libclang
+    llvmPackages_18.libcxx
+
   ];
+
+  programs.obs-studio = {
+    enable = true;
+    plugins = with pkgs.obs-studio-plugins; [
+      wlrobs             # Wayland capture support (vital if using Wayland)
+      obs-vaapi          # Hardware acceleration for AMD/Intel
+      obs-vkcapture      # Vulkan game capture
+      obs-pipewire-audio-capture
+    ];
+  };
 
   programs.steam.enable = true;
   # environment.sessionVariables.STEAM_USE_WAYLAND = "1";
@@ -258,7 +286,7 @@
     extraPackages = with pkgs; [
       intel-media-driver
       libva
-      libvdpau-va-gl
+      #libvdpau-va-gl
     ];
 
     extraPackages32 = with pkgs.pkgsi686Linux; [
