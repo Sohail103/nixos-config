@@ -261,7 +261,11 @@
     llvmPackages_18.libclang
     llvmPackages_18.libcxx
 
+    prismlauncher
+    discord
   ];
+
+  programs.gamemode.enable = true;
 
   programs.obs-studio = {
     enable = true;
